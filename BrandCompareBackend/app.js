@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 import express from 'express';
+import cors from 'cors';
+
 var app = express();
 //get_profile_data
 const bodyProfileData = {
@@ -45,7 +47,7 @@ console.log(dataProfile.resp);
 console.log("Brands");
 var dataBrands = await responseBrands.json();
 console.log(dataBrands.result);
-
+app.use(cors())
 app.get('/profiles', function(req, res){
     res.send(dataProfile.resp);
 })
