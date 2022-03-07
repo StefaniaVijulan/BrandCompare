@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   Component,
   Input,
@@ -14,15 +15,27 @@ import {
 })
 export class AppComponent implements OnInit {
   title = 'Frontend';
+  public startDate: Date;
+  public endDate: Date;
   public brandslist: any[] = []
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService, private http: HttpClient) {}
   ngOnInit(): void {
-    this.getInfo()
+    //this.getInfo()
   }
-
-  @Input()
-  getInfo() {
-    this.configService.getAllInfo().subscribe((response: any) => {
+getLog(startDate, endDate) {
+    let par = new HttpParams();
+    console.log(this.startDate)
+    console.log(this.endDate)
+    par = par.append('dataStart', startDate)
+    par = par.append('dataEnd', endDate)
+console.log(par)
+    return this.http.get(`http://localhost:8000/info`, {
+      params: par
+    })
+  }
+  //@Input()
+  getInfo(startDate, endDate) {
+    this.getLog(this.startDate, this.endDate).subscribe((response: any) => {
       this.brandslist = response
       console.log(response)
 

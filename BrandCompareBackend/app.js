@@ -118,7 +118,7 @@ for (let i = 0; i < len; i++) {
     //    console.log(brands[i].profiles[j].id)
       //  console.log(brands[i].profiles[j].profile_type)
         let profiless = brands[i].profiles[j]
-        var numerofdate = await dataProfile(profiless.id, profiless.profile_type, "12/25/2020", "12/27/2020")
+        var numerofdate = await dataProfile(profiless.id, profiless.profile_type, req.query.dataStart,req.query.dataEnd)
     
         //verificam daca are fans
         fanscount += numerofdate.fans
