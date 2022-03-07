@@ -48,7 +48,7 @@ var dataProfile = async function (idInput, typeInput, dataStart, dataEnd) {
                 console.log("lungime vector")
                 console.log(Object.values(r.resp)[0])
         */
-        // valoarea si keya pentru fiecare profil
+        
         for (const [key, value] of Object.entries(Object.values(r.resp)[0])) {
             /* console.log(key)
              console.log(value)
@@ -71,7 +71,9 @@ var dataProfile = async function (idInput, typeInput, dataStart, dataEnd) {
 
         console.log(info)
         return info;
-    })
+    }).catch(function (error) {
+        console.log(error);
+      });
 }
 /*
 dataProfile("44596321012", "facebook_page", "12/25/2020", "12/27/2020")
@@ -99,7 +101,7 @@ app.use(cors())
 
 var dataBrands = await responseBrands.json();
 
-app.get('/info', function (req, res) {
+app.get('/info', async function (req, res) {
     //pentru fiecare brand trebuie sa numaram cate profile sunt si sa retinem si numele brandului
     var brands = dataBrands.result
     var len = brands.length
@@ -115,7 +117,7 @@ app.get('/info', function (req, res) {
 
         for (let j = 0; j < brands[i].profiles.length; j++) {
             let profiless = brands[i].profiles[j]
-            var numerofdate =  dataProfile(profiless.id, profiless.profile_type, req.query.dataStart, req.query.dataEnd)
+            var numerofdate = await dataProfile(profiless.id, profiless.profile_type, req.query.dataStart, req.query.dataEnd)
             if (numerofdate.fans == "null") {
                 fanscount += 0
             } else {
@@ -136,7 +138,7 @@ app.get('/info', function (req, res) {
         }
     }
     console.log(listOfBrands)
-    res.json(listOfBrands)
+    res.send(JSON.stringify(listOfBrands))
 })
 app.listen(8000, function () {
     console.log('Listening to Port 8000');
