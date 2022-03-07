@@ -6,7 +6,9 @@ import cors from 'cors';
 var app = express();
 
 function toTimestamp(strDate) {
-    var dt = Date.parse(strDate);
+    var dt = Date.parse(strDate) + 1;
+    //console.log("data este")
+    //  console.log(strDate)
     return dt;
 }
 //get_profile_data
@@ -16,9 +18,9 @@ var dataProfile = async function (idInput, typeInput, dataStart, dataEnd) {
     let engagement = 0;
     var startd = toTimestamp(dataStart)
     var endd = toTimestamp(dataEnd)
-    /* console.log("dataaaa")
-     console.log(startd)
-     console.log(endd)*/
+    console.log("dataaaa")
+    console.log(startd)
+    console.log(endd)
     var bodyProfileData = {
         "id": 1,
         "method": "socialinsider_api.get_profile_data",
@@ -48,7 +50,7 @@ var dataProfile = async function (idInput, typeInput, dataStart, dataEnd) {
                 console.log("lungime vector")
                 console.log(Object.values(r.resp)[0])
         */
-        
+        // valoarea si keya pentru fiecare profil
         for (const [key, value] of Object.entries(Object.values(r.resp)[0])) {
             /* console.log(key)
              console.log(value)
@@ -71,9 +73,7 @@ var dataProfile = async function (idInput, typeInput, dataStart, dataEnd) {
 
         console.log(info)
         return info;
-    }).catch(function (error) {
-        console.log(error);
-      });
+    })
 }
 /*
 dataProfile("44596321012", "facebook_page", "12/25/2020", "12/27/2020")
@@ -104,41 +104,37 @@ var dataBrands = await responseBrands.json();
 app.get('/info', async function (req, res) {
     //pentru fiecare brand trebuie sa numaram cate profile sunt si sa retinem si numele brandului
     var brands = dataBrands.result
-    var len = brands.length
-    var listOfBrands = []
-    for (let i = 0; i < len; i++) {
-        listOfBrands[i] = {
-            nameB: brands[i].brandname,
-            numberB: brands[i].profiles.length
-        }
-        //  console.log(brands[i].brandname)
-        let fanscount = 0
-        let engcount = 0
-
-        for (let j = 0; j < brands[i].profiles.length; j++) {
-            let profiless = brands[i].profiles[j]
-            var numerofdate = await dataProfile(profiless.id, profiless.profile_type, req.query.dataStart, req.query.dataEnd)
-            if (numerofdate.fans == "null") {
-                fanscount += 0
-            } else {
-                fanscount += numerofdate.fans
-
-            }
-            if (numerofdate.fans == "null") {
-                engcount += 0
-            } else {
-                engcount += numerofdate.engagement
-
-            }
-            let nofansandeng = {}
-            nofansandeng.fans = fanscount
-            nofansandeng.engagement = engcount
-            console.log(nofansandeng)
-            listOfBrands[i].fanseng = nofansandeng
-        }
+var len = brands.length
+var listOfBrands = []
+for (let i = 0; i < len; i++) {
+    listOfBrands[i] = {
+        nameB: brands[i].brandname,
+        numberB: brands[i].profiles.length
     }
+  //  console.log(brands[i].brandname)
+    let fanscount = 0
+    let engcount = 0
+    for (let j = 0; j < brands[i].profiles.length; j++) {
+    //    console.log(brands[i].profiles[j].id)
+      //  console.log(brands[i].profiles[j].profile_type)
+        let profiless = brands[i].profiles[j]
+        var numerofdate = await dataProfile(profiless.id, profiless.profile_type, "12/25/2020", "12/27/2020")
+    
+        //verificam daca are fans
+        fanscount += numerofdate.fans
+        engcount += numerofdate.engagement
+      
+    }
+    let nofansandeng ={}
+    nofansandeng.fans = fanscount
+    nofansandeng.engagement = engcount
+  //  console.log("nofansandeng", nofansandeng)
+    listOfBrands[i].fanseng = nofansandeng
+  //  console.log("listOfBrands", listOfBrands)
+        }
+    
     console.log(listOfBrands)
-    res.send(JSON.stringify(listOfBrands))
+    res.json(listOfBrands)
 })
 app.listen(8000, function () {
     console.log('Listening to Port 8000');

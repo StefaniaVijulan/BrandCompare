@@ -1,0 +1,24 @@
+<table class="table table-striped table-dark">
+  <thead>
+    <tr>
+    
+      <th scope="col">Brand Name</th>
+      <th scope="col">Total Profiles</th>
+      <th scope="col">Total Fans</th>
+      <th scope="col">Total Engagement</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor="let brand of brandslist">
+          <td scop="row">{{brand.nameB}}</td>
+         
+          <td>{{brand.numberB}}</td>
+          <td scop="row">{{brand.fanseng.fans}}</td>
+         
+          <td>{{brand.fanseng.engagement}}</td>
+          
+        </tr>
+  </tbody>
+</table>
+
+<router-outlet></router-outlet>
